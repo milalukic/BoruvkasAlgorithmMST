@@ -15,6 +15,15 @@ class Graph:
             return u
         return self.find_component(self.components[u])
 
+    def set_component(self, u):
+        if self.components[u] == u:
+            return
+        else:
+            for k in self.components.keys():
+                self.components[k] = self.find_component(k)
+
+
+
     def union(self, component_size, u, v):
 
         if component_size[u] <= component_size[v]:
@@ -24,6 +33,8 @@ class Graph:
         elif component_size[u] >= component_size[v]:
             self.components[v] = self.find_component(u)
             component_size[u] += component_size[v]
+
+        print(self.components)
 
     def boruvka(self):
         component_size = []
@@ -45,8 +56,11 @@ class Graph:
                 v = self.edges[i][1]
                 w = self.edges[i][2]
 
-                u_component = self.find_component(u)
-                v_component = self.find_component(v)
+                self.set_component(u)
+                self.set_component(v)
+
+                u_component = self.components[u]
+                v_component = self.components[v]
 
                 if u_component != v_component:
                     if cheapest_edge[u_component] == -1 or cheapest_edge[u_component][2] > w:
@@ -60,8 +74,11 @@ class Graph:
                     v = cheapest_edge[vertex][1]
                     w = cheapest_edge[vertex][2]
 
-                    u_component = self.find_component(u)
-                    v_component = self.find_component(v)
+                    self.set_component(u)
+                    self.set_component(v)
+
+                    u_component = self.components[u]
+                    v_component = self.components[v]
 
                     if u_component != v_component:
                         mst_weight += w
@@ -94,3 +111,4 @@ g.add_edge(6, 7, 1)
 g.add_edge(7, 8, 3)
 
 g.boruvka()
+
